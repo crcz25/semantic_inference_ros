@@ -63,15 +63,27 @@ from semantic_inference_python.config import Config, register_config
 from semantic_inference_python.models.instruct_blip import (
     InstructBlipForConditionalGeneration,
 )
-from semantic_inference_python.models.deepseek.deepseek_vl2.models import (
-    DeepseekVLV2ForCausalLM,
-    DeepseekVLV2Processor,
-    select_best_resolution,
-    VisionTransformer,
-    MlpProjector,
-    VisionEncoderConfig,
-    MlpProjectorConfig,
-)
+try:
+    from semantic_inference_python.models.deepseek.deepseek_vl2.models import (
+        DeepseekVLV2ForCausalLM,
+        DeepseekVLV2Processor,
+        select_best_resolution,
+        VisionTransformer,
+        MlpProjector,
+        VisionEncoderConfig,
+        MlpProjectorConfig,
+    )
+except ImportError:
+    # The deepseek submodule (semantic_inference_python/models/deepseek) is not
+    # checked out. Only DeepSeekVL2/DeepSeekVL2Visual actually need these; defer
+    # the failure to when one of those is instantiated instead of on package import.
+    DeepseekVLV2ForCausalLM = None
+    DeepseekVLV2Processor = None
+    select_best_resolution = None
+    VisionTransformer = None
+    MlpProjector = None
+    VisionEncoderConfig = None
+    MlpProjectorConfig = None
 import supervision as sv
 from supervision.draw.color import Color, ColorPalette
 import ultralytics.utils.ops
